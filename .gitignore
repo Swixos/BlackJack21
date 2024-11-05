@@ -1,4 +1,4 @@
-.venv/
-bootcamp/__pycache__/
-polls/__pycache__/
-polls/migrations/__pycache__/
+back-end/.venv/
+back-end/bootcamp/__pycache__/
+back-end/polls/__pycache__/
+back-end/polls/migrations/__pycache__/
