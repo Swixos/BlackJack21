@@ -1,6 +1,8 @@
 from ninja import NinjaAPI, ModelSchema, Schema
 from polls.models import Game, Player
 from django.http import Http404
+from django.core.exceptions import ValidationError
+from django.db import transaction
 
 api = NinjaAPI()
 
@@ -52,10 +54,22 @@ class AddGameSchema(Schema):
 # def get(request, question_id: int):
 #     return Question.objects.get(pk=question_id)
 
-@api.post("/create_game/", response=GameSchema)
+@api.post("/create_game", response=GameSchema)
+@transaction.atomic
 def add(request, add_game: AddGameSchema):
-    game = Game.objects.create(name=add_game.name)
-    Player.objects.bulk_create([Player(name=player, game=game) for player in add_game.players])
+    if len(add_game.name) < 3:
+        return api.create_response(request, {"detail": "Le nom de la partie doit contenir au moins 3 caractères"}, status=400)
+    game = Game(name=add_game.name)
+    game.full_clean()
+    game.save()
+    if len(add_game.players) < 1:
+        return api.create_response(request, {"detail": "La partie doit contenir au moins un joueur"}, status=400)
+    for player in add_game.players:
+        print(player)
+        if len(player) < 3:
+            return api.create_response(request, {"detail": "Le nom du joueur doit contenir au moins 3 caractères"}, status=400)
+        else:
+            Player.objects.create(name=player, game=game)
     return game
 
 @api.get("/game/{game_id}", response=GameSchema)
@@ -65,6 +79,10 @@ def get(request, game_id: int):
     except Game.DoesNotExist:
         raise Http404("Game does not exist")
     return game
+
+@api.get("/games", response=list[GameSchema])
+def get_all(request):
+    return Game.objects.all()
 
 @api.delete("/game/{game_id}")
 def delete(request, game_id: int):

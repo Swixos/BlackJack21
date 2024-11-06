@@ -1,0 +1,62 @@
+.title {
+  color: rgb(233, 233, 233);
+
+  &::first-letter {
+    color: rgb(255, 255, 0);
+  }
+}
+
+h2 {
+  color: rgb(255, 255, 255);
+}
+
+.max-length {
+  border: 2.7px solid #eb1111;
+  &:focus-within {
+    border: 2.7px solid #eb1111;
+  }
+  &::after {
+    content: "⚠️"; 
+    color: #eb1111;
+    position: absolute;
+    right: 10px;
+  }
+}
+
+.case {
+  display: flex;
+  filter: drop-shadow(0 0 0.75rem rgb(0, 0, 0));
+  border: 2.7px solid #2e2e2e;
+  border-radius: 14px;
+  width: 40vw;
+  height: 50px;
+  font-weight: 600;
+  background-color: black;
+  align-items: center;
+  transition: border 0.3s ease-in-out;
+  input {
+    position: absolute;
+    font-size: 14px;
+    width: 86%;
+    height: 100%;
+    background-color: transparent;
+    border: 0;
+    color: rgb(163, 163, 163);
+    padding-left: 3.5rem;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    font-weight: 600;
+  }
+  img {
+    margin-left: 12px;
+  }
+  &::placeholder {
+    font-weight: 650;
+  }
+  &:focus-visible {
+    outline: none;
+  }
+  &:focus-within {
+    border: 2.7px solid #ebb011;
+  }
+}
